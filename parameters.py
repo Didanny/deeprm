@@ -48,6 +48,7 @@ class Parameters:
              self.max_job_size * self.num_nw) * self.num_res + \
             self.backlog_width + \
             1  # for extra info, 1) time since last new job
+        self.network_input_width = int(self.network_input_width)
 
         # compact representation
         self.network_compact_dim = (self.num_res + 1) * \
@@ -79,6 +80,7 @@ class Parameters:
              self.max_job_size * self.num_nw) * self.num_res + \
             self.backlog_width + \
             1  # for extra info, 1) time since last new job
+        self.network_input_width = int(self.network_input_width)
 
         # compact representation
         self.network_compact_dim = (self.num_res + 1) * \

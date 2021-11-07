@@ -2,7 +2,8 @@ import time
 import threading
 import numpy as np
 import theano
-import cPickle
+# import cPickle
+import pickle
 import matplotlib.pyplot as plt
 
 from multiprocessing import Process
@@ -235,7 +236,7 @@ def launch(pa, pg_resume=None, render=False, repre='image', end='no_new_job'):
 
     for ex in xrange(pa.num_ex):
 
-        print "-prepare for env-", ex
+        print("-prepare for env-{0}".format(ex))
 
         env = environment.Env(pa, nw_len_seqs=nw_len_seqs, nw_size_seqs=nw_size_seqs,
                               render=False, repre=repre, end=end)
@@ -244,7 +245,7 @@ def launch(pa, pg_resume=None, render=False, repre='image', end='no_new_job'):
 
     for ex in xrange(pa.batch_size + 1):  # last worker for updating the parameters
 
-        print "-prepare for worker-", ex
+        print("-prepare for worker-{0}".format(ex))
 
         pg_learner = pg_network.PGLearner(pa)
 
@@ -301,7 +302,7 @@ def launch(pa, pg_resume=None, render=False, repre='image', end='no_new_job'):
 
             if ex_counter >= pa.batch_size or ex == pa.num_ex - 1:
 
-                print ex, "out of", pa.num_ex
+                print("{0} out of {1}".format(ex, pa.num_ex))
 
                 ex_counter = 0
 
@@ -352,18 +353,18 @@ def launch(pa, pg_resume=None, render=False, repre='image', end='no_new_job'):
 
         timer_end = time.time()
 
-        print "-----------------"
-        print "Iteration: \t %i" % iteration
-        print "NumTrajs: \t %i" % len(eprews)
-        print "NumTimesteps: \t %i" % np.sum(eplens)
+        print("-----------------")
+        print("Iteration: \t %i" % iteration)
+        print("NumTrajs: \t %i" % len(eprews))
+        print("NumTimesteps: \t %i" % np.sum(eplens))
         # print "Loss:     \t %s" % np.mean(loss_all)
-        print "MaxRew: \t %s" % np.average([np.max(rew) for rew in all_eprews])
-        print "MeanRew: \t %s +- %s" % (np.mean(eprews), np.std(eprews))
-        print "MeanSlowdown: \t %s" % np.mean(all_slowdown)
-        print "MeanLen: \t %s +- %s" % (np.mean(eplens), np.std(eplens))
-        print "MeanEntropy \t %s" % (np.mean(all_entropy))
-        print "Elapsed time\t %s" % (timer_end - timer_start), "seconds"
-        print "-----------------"
+        print("MaxRew: \t %s" % np.average([np.max(rew) for rew in all_eprews]))
+        print("MeanRew: \t %s +- %s" % (np.mean(eprews), np.std(eprews)))
+        print("MeanSlowdown: \t %s" % np.mean(all_slowdown))
+        print("MeanLen: \t %s +- %s" % (np.mean(eplens), np.std(eplens)))
+        print("MeanEntropy \t %s" % (np.mean(all_entropy)))
+        print("Elapsed time\t %s" % (timer_end - timer_start), "seconds")
+        print("-----------------")
 
         timer_start = time.time()
 

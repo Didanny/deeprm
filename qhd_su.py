@@ -2,15 +2,14 @@ import numpy as np
 import theano
 import time
 import sys
-import pickle
-from tqdm import tqdm
+import cPickle
 
 import environment
 import pg_network
 import other_agents
 import job_distribution
 
-np.set_printoptions(threshold=sys.maxsize)
+np.set_printoptions(threshold='nan')
 
 
 def add_sample(X, y, idx, X_to_add, y_to_add):
@@ -23,7 +22,7 @@ def iterate_minibatches(inputs, targets, batchsize, shuffle=False):
     if shuffle:
         indices = np.arange(len(inputs))
         np.random.shuffle(indices)
-    for start_idx in tqdm(range(0, len(inputs) - batchsize + 1, batchsize)):
+    for start_idx in range(0, len(inputs) - batchsize + 1, batchsize):
         if shuffle:
             excerpt = indices[start_idx:start_idx + batchsize]
         else:
@@ -60,15 +59,15 @@ def launch(pa, pg_resume=None, render=False, repre='image', end='no_new_job'):
     # print 'nw_size_seqs=', nw_size_seqs
 
     mem_alloc = 4
-    print(int(pa.network_input_width))
+
     X = np.zeros([pa.simu_len * pa.num_ex * mem_alloc, 1,
                   pa.network_input_height, pa.network_input_width],
-                  dtype=theano.config.floatX)
+                 dtype=theano.config.floatX)
     y = np.zeros(pa.simu_len * pa.num_ex * mem_alloc,
                  dtype='int32')
 
-    print('network_input_height={0}'.format(pa.network_input_height))
-    print('network_input_width={0}'.format(pa.network_input_width))
+    print 'network_input_height=', pa.network_input_height
+    print 'network_input_width=', pa.network_input_width
 
     counter = 0
 
@@ -76,7 +75,7 @@ def launch(pa, pg_resume=None, render=False, repre='image', end='no_new_job'):
 
         env.reset()
 
-        for _ in range(pa.episode_max_length):
+        for _ in xrange(pa.episode_max_length):
 
             # ---- get current state ----
             ob = env.observe()
@@ -114,16 +113,13 @@ def launch(pa, pg_resume=None, render=False, repre='image', end='no_new_job'):
     print("Start training...")
     # ----------------------------
 
-    for epoch in range(pa.num_epochs):
+    for epoch in xrange(pa.num_epochs):
 
         # In each epoch, we do a full pass over the training data:
         train_err = 0
         train_acc = 0
         train_batches = 0
         start_time = time.time()
-
-        # progress_bar = tqdm(total=)
-
         for batch in iterate_minibatches(X_train, y_train, pa.batch_size, shuffle=True):
             inputs, targets = batch
             err, prob_act = pg_learner.su_train(inputs, targets)
