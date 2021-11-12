@@ -1,7 +1,7 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-import theano
+# import theano
 
 import parameters
 
@@ -117,7 +117,7 @@ class Env:
             compact_repr = np.zeros(self.pa.time_horizon * (self.pa.num_res + 1) +  # current work
                                     self.pa.num_nw * (self.pa.num_res + 1) +        # new work
                                     1,                                              # backlog indicator
-                                    dtype=theano.config.floatX)
+                                    dtype=np.float32)
 
             cr_pt = 0
 
